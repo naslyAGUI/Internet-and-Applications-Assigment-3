@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<style type="text/css">
+
+  
+   
+   html { 
+  background: url(trabzon.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+   
+   
+   section {
+    width: 30% ;
+    margin:auto;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #FFF8DC;
+   
+    
+    }
+
+#btn {
+
+color:#800000 ;
+}
+
+h1 {
+
+ font-family: Courier, Monaco, monospace;
+ color: #800000;
+}
+
+</style>
+
+    <head>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+		
+ <script type = "text/javascript"> 
+ $(document).ready( function(){ /*anonymous function executed when document ready*/
+ 
+   $("button").click(function(){ /* 2nd anony function it gets executed at each button click */
+   
+     var zip = $("#zip").val(); /* element with id "zip" and it would get its value */
+	 
+     if(zip != ''){
+         
+		 $.ajax({ /*has a ajax object */
+             type: 		"GET", /*HTTP method -> php use $_GET */
+             url: 		"weather.php", /* action */
+             data: 		"zip="+zip, /* query string; zip: whatever you type */
+             
+             
+		     beforeSend: function(){ 		
+			                  $("#B").html("waiting....");     /* B is an element */           }, /* executed before request is sent to the service, php sleep (2.5) */
+         
+			 error: 		function(xhr, status, error) {  
+							  alert( "Error Mesaage:  \r\nNumeric code is: "  + xhr.status + " \r\nError is " + error);   }, /* http errors 404 or 500 */
+			 
+			 success: 	function(result){ /* where the echoes go */
+				  
+				r = JSON.parse(result); /* converts the string "result" into JSON object */ 
+        var icon = "<img src =\"http://openweathermap.org/img/w/" + r.weather[0].icon + ".png\" >" ;
+      
+
+       
+        res =  	"<br>"        + icon  +    /* provides a weather icon */
+
+
+                "<br>Country: "			                + r.sys.country+  " "				  		    +		/* name property 			*/
+                "<br>City: "			                    + r.name+  " "				  		          +		/* name property 			*/
+                "<br>Coordinates: "		              + r.coord.lon+ "," + r.coord.lat+" "	+ 	/* Coordinates				*/
+                "<br>Temperature C: " 	  + r.main.temp + "&deg;C "		  +		/* main's temp 				*/
+					      "<br>Temperature F: " 	  + (r.main.temp*1.8 + 32) +"&deg;F "		+		/* temp in Fahrenheit 			*/
+                "<br>Weather: " 		  + r.weather[0].main + " "		  +		/* weather's main property 	*/
+              	
+                "<br>Description: "                  + r.weather[0].description+ " " 	  	+		/* Description				*/
+                "<br>Humidity: "                     + r.main.humidity+ " %"						    +		/* humidity					  */
+                "<br>Wind Speed: "                   + r.wind.speed+ "m/s" +" "            +   /*wind speed   */
+
+                "<br>Sunrise/epoch: "  + r.sys.sunrise + " "			  +
+                "<br>Sunset/epoch: "  + r.sys.sunset + " "	      +
+					      "<br>";
+				
+
+				
+				$("#B").html(res);
+        
+        
+				
+			}	//success  - the } closes the definition or body of the function(result){ ...
+		});	    //ajax  - the }) closes the  $.ajax({ ... the } closes the JSOn argument, and ) matches opening ( 
+     };			//the }  closes the if(zip != '')  {  ....
+  });			//anonymous fn handler for button click: } closes the body of code...the ) closes the click (   )
+});				//the  })  closes the ready event anonymous handler:  ready( function(){ ....
+     
+</script>
+</head>
+<body>
+<br><br><br><section>
+<h1><center> Weather Report</h1>   
+<center><input 	id = "zip" type = "number" name = "zip" placeholder="Zipcode" autocomplete="off" min="0" required>
+<button id = "btn" type = "BUTTON"><b>REQUEST WEATHER</b></button>
+<div id= "B"></div>
+<section>
+</body>
+</html>
